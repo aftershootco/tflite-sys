@@ -1,5 +1,5 @@
 [package]
-name = "tflitec-sys"
+name = "tflitec_sys"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,3 +7,9 @@ edition = "2021"
 
 [build-dependencies]
 cmake = "0.1.48"
+bindgen = "0.60"
+
+[features]
+default = ["build","bindgen"]
+build = []
+bindgen = []
