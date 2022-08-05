@@ -4,4 +4,11 @@
 #![allow(non_snake_case)]
 #![allow(unused)]
 #![allow(improper_ctypes)]
+
+#[cfg(target_family = "windows")]
+#[path = "windows.rs"]
+pub mod bindings;
+
+#[cfg(target_family = "unix")]
+#[path = "unix.rs"]
 pub mod bindings;

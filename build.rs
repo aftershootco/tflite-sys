@@ -1,3 +1,8 @@
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+use std::env;
+use std::path::{Path, PathBuf};
+
 extern crate bindgen;
 
 #[cfg(any(feature = "bindgen", feature = "build"))]
@@ -83,21 +88,24 @@ fn generate_bindings(tf_src_path: impl AsRef<Path>) {
         // Unwrap the Result and panic on failure.
         .expect("Unable to generate bindings");
     let home = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap()).join("src");
+
+    let bindings = if cfg!(unix) {
+        home.join("unix.rs")
+    } else {
+        home.join("windows.rs")
+    };
     bindgen
-        .write_to_file(home.join("bindings.rs"))
+        .write_to_file(bindings)
         .expect("Failed to write bindings");
 }
 
 fn main() {
     // println!("cargo:rustc-link-lib=static=tensorflowlite_c");
-
+    let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let tf_src_path = out_dir.join("tensorflow");
     #[cfg(any(feature = "bindgen", feature = "build"))]
     {
-        use std::env;
-        use std::path::{Path, PathBuf};
-        let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
         clone(&out_dir);
-        let tf_src_path = out_dir.join("tensorflow");
     }
     #[cfg(feature = "build")]
     {
