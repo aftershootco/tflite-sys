@@ -10,6 +10,6 @@ cmake = "0.1.48"
 bindgen = "0.60"
 
 [features]
-default = ["build","bindgen"]
+default = []
 build = []
 bindgen = []
