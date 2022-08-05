@@ -1,6 +1,3 @@
-use std::env;
-use std::path::{Path, PathBuf};
-
 extern crate bindgen;
 
 #[cfg(any(feature = "bindgen", feature = "build"))]
@@ -92,12 +89,16 @@ fn generate_bindings(tf_src_path: impl AsRef<Path>) {
 }
 
 fn main() {
-    let out_dir = std::path::PathBuf::from(env::var("OUT_DIR").unwrap());
-    let tf_src_path = out_dir.join("tensorflow");
     // println!("cargo:rustc-link-lib=static=tensorflowlite_c");
 
     #[cfg(any(feature = "bindgen", feature = "build"))]
-    clone(&out_dir);
+    {
+        use std::env;
+        use std::path::{Path, PathBuf};
+        let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
+        clone(&out_dir);
+        let tf_src_path = out_dir.join("tensorflow");
+    }
     #[cfg(feature = "build")]
     {
         link_libs_c(build_tflite_c(
